@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // ── Security headers applied to every response ─────────────
   async headers() {
     return [
       {
@@ -22,7 +21,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self'",
-              "connect-src 'self' https://api.stripe.com",
+              "connect-src 'self' http://localhost:8000 https://api.stripe.com",
               "frame-src https://js.stripe.com https://hooks.stripe.com",
             ].join("; "),
           },
@@ -31,30 +30,20 @@ const nextConfig = {
     ];
   },
 
-  // ── Image optimization ─────────────────────────────────────
   images: {
-    formats: ["image/webp", "image/avif"],     // modern compressed formats
+    formats: ["image/webp", "image/avif"],
     remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cdn.yourstore.com",          // restrict to your CDN only
-      },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",        // dev placeholder
-      },
+      { protocol: "https", hostname: "cdn.yourstore.com" },
+      { protocol: "https", hostname: "images.unsplash.com" },
     ],
     minimumCacheTTL: 3600,
   },
 
-  // ── Never expose server vars to the client bundle ──────────
-  // Use NEXT_PUBLIC_ prefix ONLY for truly public values
   env: {},
 
-  // ── Output ────────────────────────────────────────────────
-  output: "standalone",                        // Docker-friendly
+  output: "standalone",
   reactStrictMode: true,
-  poweredByHeader: false,                      // don't advertise Next.js version
+  poweredByHeader: false,
 };
 
 module.exports = nextConfig;
