@@ -65,11 +65,12 @@ app.state.limiter = limiter
 app.add_middleware(SecurityHeadersMiddleware)
 app.add_middleware(SlowAPIMiddleware)
 origins = [
-    "http://localhost:3000",  # Your Next.js frontend
+    "http://localhost:3000",  # Next.js default
+    "http://localhost:3001",  # Next.js custom port (current)
 ]
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=settings.cors_origins or ["http://localhost:3000", "http://localhost:3001"],
     allow_credentials=True,              # required for HTTP-only cookie
     allow_methods=["*"],
     allow_headers=["*"],

@@ -32,18 +32,10 @@ async function fetchProducts(params: PageProps["searchParams"]): Promise<Product
   if (params.min_price) qs.set("min_price", params.min_price);
   if (params.max_price) qs.set("max_price", params.max_price);
 
-  // Server-side fetch — uses internal URL, no browser involved
-  // const res = await fetch(
-  //   `${process.env.API_BASE_URL}/products?${qs.toString()}`,
-  //   {
-  //     next: { revalidate: 60 },   // ISR: revalidate every 60s
-  //   }
-  // );
-  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
-
-if (!BASE_URL) throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
-
-const res = await fetch(`${BASE_URL}/products?page=1&limit=12`);
+  const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000/api/v1";
+  const res = await fetch(`${BASE_URL}/products?${qs.toString()}`, {
+    cache: 'no-store',  // Dynamic fetch for dev/filter updates
+  });
 
   if (!res.ok) throw new Error("Failed to fetch products");
   return res.json();
