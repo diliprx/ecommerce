@@ -29,7 +29,12 @@ export function useAuth() {
       setUser(me);
       await fetchCart();
 
-      router.push("/products");
+      // Role-based redirect
+      if (me.role === "admin") {
+        router.push("/admin");
+      } else {
+        router.push("/products");
+      }
     },
     [setAccessToken, setUser, fetchCart, router]
   );

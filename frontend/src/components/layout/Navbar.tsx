@@ -30,7 +30,17 @@ export function Navbar() {
           <Link href="/products" className="hover:text-blue-600 transition-colors">
             Products
           </Link>
-          {isAuthenticated && (
+          {isAuthenticated && user?.role === "admin" && (
+            <>
+              <Link href="/admin" className="hover:text-blue-600 transition-colors flex items-center gap-1 font-semibold text-orange-600">
+                🛠️ Admin
+              </Link>
+              <Link href="/admin/add" className="hover:text-blue-600 transition-colors flex items-center gap-1">
+                ➕ Add Product
+              </Link>
+            </>
+          )}
+          {isAuthenticated && user?.role !== "admin" && (
             <Link href="/orders" className="hover:text-blue-600 transition-colors flex items-center gap-1">
               <Package className="h-4 w-4" /> Orders
             </Link>

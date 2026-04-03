@@ -33,8 +33,16 @@ const nextConfig = {
   images: {
     formats: ["image/webp", "image/avif"],
     remotePatterns: [
+      { protocol: "https", hostname: "www.google.com" },
+      { protocol: "https", hostname: "picsum.photos" },
+      { protocol: "https", hostname: "*.picsum.photos" },
+      { protocol: "https", hostname: "www.onida.com" },
+      { protocol: "https", hostname: "*.onida.com" },
+
       { protocol: "https", hostname: "cdn.yourstore.com" },
       { protocol: "https", hostname: "images.unsplash.com" },
+      { protocol: "https", hostname: "cdn.shopnext.com" },
+      { protocol: "https", hostname: "*.cdn.shopnext.com" },
     ],
     minimumCacheTTL: 3600,
   },
@@ -44,6 +52,18 @@ const nextConfig = {
   output: "standalone",
   reactStrictMode: true,
   poweredByHeader: false,
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:8000/api/:path*",
+      },
+      {
+        source: "/auth/:path*",
+        destination: "http://localhost:8000/api/v1/auth/:path*",
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

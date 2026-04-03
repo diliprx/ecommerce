@@ -24,7 +24,7 @@ class Settings(BaseSettings):
     APP_ENV: str = "production"
     APP_DEBUG: bool = False
 
-    # Comma-separated string → list during validation
+    # Comma-separated origins (e.g. "http://localhost:3000,http://localhost:3001")
     ALLOWED_ORIGINS: str = ""
 
     @field_validator("ALLOWED_ORIGINS", mode="before")

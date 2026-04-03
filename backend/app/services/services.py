@@ -90,6 +90,11 @@ class AuthService:
             logger.warning("login_failed", email=req.email)
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid credentials")
 
+        # Admin email enforcement
+        if req.email.endswith("@shopnext.com") and not user.is_admin:
+            logger.warning("admin_email_non_admin", email=req.email, user_id=user.id)
+            raise HTTPException(status.HTTP_403_FORBIDDEN, "Admin email (@shopnext.com) requires admin role")
+
         role_name = user.role.name if user.role else "user"
         access_token = create_access_token(str(user.id), role=role_name)
         raw_rt, rt_hash = generate_refresh_token()

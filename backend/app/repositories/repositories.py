@@ -144,6 +144,14 @@ class ProductRepository:
         product.stock -= quantity
         return True
 
+    def get_by_slug(self, slug: str) -> Optional[Product]:
+        """Get active product by slug."""
+        stmt = (
+            select(Product)
+            .where(Product.slug == slug, Product.deleted_at.is_(None))
+        )
+        return self.db.execute(stmt).scalar_one_or_none()
+
 
 # ── Cart ──────────────────────────────────────────────────────
 class CartRepository:
