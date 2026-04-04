@@ -61,7 +61,8 @@ export default function AdminProductsPage() {
       });
       if (searchTerm) params.append("search", searchTerm);
       
-      const response = await api.get<ProductListResponse>(`/products?${params}`);
+      const response = await api.get<ProductListResponse>(`/products/admin?${params}`);
+
       // Defensive: ensure products is always array
       setProducts(Array.isArray(response.products) ? response.products : []);
       setTotal(response.total || 0);

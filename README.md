@@ -254,25 +254,52 @@ Tests use SQLite in-memory (no MySQL required for CI).
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Production)
 
 ```bash
-# 1. Clone and configure
+# 1. Copy env files
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
-# Edit both .env files with real values
+# Edit .env files: DB creds, JWT_SECRET_KEY, Stripe keys, etc.
 
-# 2. Start all services
-docker compose up --build
+# 2. Full stack (recommended)
+docker compose up --build -d
 
 # 3. Access
-# Frontend:  http://localhost:3000
-# API docs:  http://localhost:8000/api/docs  (dev only)
-# API:       http://localhost:8000/api/v1
+Frontend: http://localhost:3000
+API docs: http://localhost:8000/api/docs (dev only)
+API:      http://localhost:8000/api/v1
 
-# 4. Run migrations (first time)
+# 4. Migrations (first time)
 docker compose exec backend alembic upgrade head
 ```
+
+## 🔧 Development (Hot Reload)
+
+### Option 1: Script (Recommended)
+```bash
+# From project root (ecommerce/)
+./backend/run_dev.sh
+```
+
+### Option 2: Manual
+```bash
+cd backend
+call venv\\Scripts\\activate
+pip install -r requirements.txt  # if needed
+uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**✅ Auto-installs deps, activates venv, starts with reload. Ctrl+C to stop.**
+
+**New tab:** `cd frontend && npm run dev` for frontend hot reload.
+
+### Verify Backend
+```bash
+curl http://localhost:8000/health
+# {"status": "ok", "version": "1.0.0"}
+```
+
 
 ---
 

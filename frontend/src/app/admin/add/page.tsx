@@ -78,7 +78,7 @@ const onSubmit = async (data: FormData) => {
         category_id: data.category_id,
         name: data.name,
         description: data.description || undefined,
-        price: Number(data.price).toFixed(2),  // Fix: Ensure Decimal-compatible string "23.00"
+        price: data.price,
         stock: data.stock,
         image_url: data.image_url || undefined,
         sku: data.sku || undefined,

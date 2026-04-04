@@ -16,6 +16,8 @@ from app.schemas.schemas import (
     TokenResponse,
     UserOut,
 )
+from app.core.security import hash_password
+from app.models.models import User
 from app.services.services import AuthService
 
 router = APIRouter(prefix="/auth", tags=["auth"])
@@ -42,7 +44,7 @@ async def register(request: Request, body: RegisterRequest, db: DB):
     if existing:
         raise HTTPException(status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     
-    hashed_pw = bcrypt.hash(body.password)
+    hashed_pw = hash_password(body.password)
     user = User(
         email=body.email,
         password_hash=hashed_pw,

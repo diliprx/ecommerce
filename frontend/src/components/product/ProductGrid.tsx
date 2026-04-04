@@ -1,9 +1,11 @@
+
 /**
  * src/components/product/ProductGrid.tsx
  * Server-safe — no client state, pure rendering.
  * Uses next/image for automatic WebP conversion + lazy loading.
  */
 import Image from "next/image";
+import { ImageWithFallback } from "./ImageWithFallback";
 import Link from "next/link";
 import type { Product } from "@/types";
 
@@ -32,15 +34,16 @@ function ProductCard({ product }: { product: Product }) {
       {/* Image */}
       <div className="relative aspect-square bg-gray-50 overflow-hidden">
         {product.image_url ? (
-          <Image
+          <ImageWithFallback
             src={product.image_url}
             alt={product.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-300"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-            loading="lazy"      // lazy load below-the-fold cards
+            loading="lazy"
           />
         ) : (
+
           <div className="flex items-center justify-center h-full text-gray-300 text-sm">
             No image
           </div>

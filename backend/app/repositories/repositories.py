@@ -152,6 +152,14 @@ class ProductRepository:
         )
         return self.db.execute(stmt).scalar_one_or_none()
 
+    def get_by_sku(self, sku: str) -> Optional[Product]:
+        """Get product by SKU (any status)."""
+        stmt = (
+            select(Product)
+            .where(Product.sku == sku)
+        )
+        return self.db.execute(stmt).scalar_one_or_none()
+
 
 # ── Cart ──────────────────────────────────────────────────────
 class CartRepository:

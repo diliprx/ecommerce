@@ -4,6 +4,7 @@
  */
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { ImageWithFallback } from "@/components/product/ImageWithFallback";
 import Image from "next/image";
 import type { Product } from "@/types";
 import { AddToCartButton } from "@/components/product/AddToCartButton";
@@ -13,7 +14,7 @@ interface Props {
 }
 
 async function fetchProduct(id: string): Promise<Product | null> {
-  const res = await fetch(`${process.env.API_BASE_URL}/products/${id}`, {
+const res = await fetch(`${process.env.API_BASE_URL ?? '/api/v1'}/products/${id}`, {
     next: { revalidate: 120 },
   });
   if (res.status === 404) return null;
@@ -46,15 +47,16 @@ export default async function ProductDetailPage({ params }: Props) {
         {/* ── Image ── */}
         <div className="relative aspect-square rounded-2xl overflow-hidden bg-gray-100">
           {product.image_url ? (
-            <Image
+            <ImageWithFallback
               src={product.image_url}
               alt={product.name}
               fill
               className="object-cover"
               sizes="(max-width: 768px) 100vw, 50vw"
-              priority                              // LCP — load eagerly
+              priority
             />
           ) : (
+
             <div className="flex items-center justify-center h-full text-gray-400">
               No image
             </div>
