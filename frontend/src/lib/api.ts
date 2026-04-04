@@ -28,9 +28,12 @@ export const apiClient = axios.create({
 
 // ── Request interceptor: attach access token ──────────────────
 apiClient.interceptors.request.use((config: InternalAxiosRequestConfig) => {
-  const token = useAuthStore.getState().accessToken;
-  if (token && config.headers) {
-    config.headers["Authorization"] = `Bearer ${token}`;
+  // SSR-safe: only add token from store on client-side
+  if (typeof window !== 'undefined') {
+    const token = useAuthStore.getState().accessToken;
+    if (token && config.headers) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
   }
   return config;
 });
@@ -76,15 +79,16 @@ apiClient.interceptors.response.use(
           { withCredentials: true }    // sends the HTTP-only refresh cookie
         );
         const newToken = resp.data.access_token;
-        useAuthStore.getState().setAccessToken(newToken);
+        if (typeof window !== 'undefined') {
+          useAuthStore.getState().setAccessToken(newToken);
+        }
         processQueue(null, newToken);
         originalRequest.headers["Authorization"] = `Bearer ${newToken}`;
         return apiClient(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        useAuthStore.getState().clearAuth();
-        // Redirect to login on client side
-        if (typeof window !== "undefined") {
+        if (typeof window !== 'undefined') {
+          useAuthStore.getState().clearAuth();
           window.location.href = "/auth/login";
         }
         return Promise.reject(refreshError);

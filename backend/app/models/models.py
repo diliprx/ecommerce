@@ -121,7 +121,8 @@ class Product(Base):
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     price: Mapped[Decimal] = mapped_column(DECIMAL(12, 2), nullable=False)
     stock: Mapped[int] = mapped_column(Integer, default=0, nullable=False)
-    image_url: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True)
+    image_url: Mapped[Optional[str]] = mapped_column(String(1000), nullable=True)  # Legacy
+    image_urls: Mapped[Optional[str]] = mapped_column(String(2000), nullable=True)  # JSON ["url1","url2"]
     sku: Mapped[Optional[str]] = mapped_column(String(100), unique=True, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
     deleted_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True, index=True)

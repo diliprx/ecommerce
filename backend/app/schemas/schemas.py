@@ -124,7 +124,8 @@ class ProductOut(BaseModel):
     description: Optional[str]
     price: Decimal
     stock: int
-    image_url: Optional[str]
+    image_url: Optional[str]  # Legacy first image
+    image_urls: Optional[List[str]] = None
     category: CategoryOut
     created_at: datetime
 
@@ -137,7 +138,8 @@ class ProductCreate(BaseModel):
     description: Optional[str] = Field(default=None, max_length=5000)
     price: Decimal = Field(gt=0, decimal_places=2)
     stock: int = Field(ge=0)
-    image_url: Optional[str] = Field(default=None, max_length=1000)
+    image_url: Optional[str] = Field(default=None, max_length=1000)  # Legacy
+    image_urls: Optional[List[str]] = Field(default=None)
     sku: Optional[str] = Field(default=None, max_length=100)
 
     @field_validator("name", "description", mode="before")

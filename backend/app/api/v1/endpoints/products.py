@@ -49,7 +49,7 @@ async def list_categories(db: DB):
 
 @router.get("/{product_id}", response_model=ProductOut)
 async def get_product(product_id: int, db: DB):
-    \"\"\"Get single product detail.\"\"\"
+    """Get single product detail."""
     svc = ProductService(db)
     return svc.get_product(product_id)
 
@@ -62,7 +62,7 @@ async def list_admin_products(
     limit: int = Query(default=10, ge=1, le=100),
     search: Optional[str] = Query(default=None, max_length=200),
 ):
-    \"\"\"Admin: list ALL products (incl inactive).\"\"\"
+    """Admin: list ALL products (incl inactive)."""
     repo = ProductRepository(db)
     # For admin, override is_active filter
     base = (
@@ -88,7 +88,7 @@ async def list_admin_products(
 
 @router.put("/{product_id}", response_model=ProductOut)
 async def update_product(product_id: int, body: ProductCreate, db: DB, admin: AdminUser):
-    \"\"\"Admin only — update product.\"\"\"
+    """Admin only — update product."""
     repo = ProductRepository(db)
     product = repo.get_by_id(product_id)
     if not product:
@@ -122,7 +122,7 @@ async def update_product(product_id: int, body: ProductCreate, db: DB, admin: Ad
 
 @router.post("", response_model=ProductOut, status_code=status.HTTP_201_CREATED)
 async def create_product(body: ProductCreate, db: DB, _admin: AdminUser):
-    \"\"\"Admin only — create a new product.\"\"\"
+    """Admin only — create a new product."""
     # Ensure default category exists (Electronics id=1)
     category = db.query(Category).filter(Category.id == 1).first()
     if not category:
@@ -158,7 +158,8 @@ async def create_product(body: ProductCreate, db: DB, _admin: AdminUser):
         # Auto-generate: first 10 chars of slug + random 4 digits
         sku = f"{slug[:10]}-{random.randint(1000, 9999)}"
     
-product_data = {
+    # Always create product_data after slug/sku are finalized
+    product_data = {
         'category_id': category.id,
         'name': body.name,
         'slug': slug,
